@@ -16,7 +16,7 @@ function Home() {
         api.get("/api/notes/")//get this route from backend URLs
         .then((res) => res.data)
         .then((data) => { setNotes(data); console.log("data: ",data) })
-        .catch((err) => alert(err));
+        .catch((err) => alert('error in getNotes: ',err));
     }
 
     const deleteNote = (id) => {
@@ -24,22 +24,29 @@ function Home() {
             if (res.status === 204) alert("Note deleted!")
             else alert("Failed to delete note.")
             getNotes()// once note is deleted, this gets updated array of notes
-        }).catch((error) => alert(error))
+        }).catch((error) => alert('error in deleteNote: ',error))
     }
 
     const createNote = (e) => {
         e.preventDefault()
         api.post("/api/notes/", {content, title}).then((res) => {
-            if (res.status === 201) alert("Note Created!")
+            if (res.status === 201) null// alert("Note Created!")
             else alert("Failed to create note.")
             getNotes()// once note is deleted, this gets updated array of notes
-        }).catch((error) => alert(error))
+        }).catch((error) => alert('error in createNote: ',error))
     }
 
     return (
         <div>
             <div>
-                <h2>Notes</h2>
+                <a href="/logout/">
+                    <button>
+                        Logout
+                    </button>
+                </a>
+            </div>
+            <div>
+                <h2>Notes {notes&&notes.filter((note, index) => index == 0).map((note) => (<p>ww{note.author_name}</p>))}</h2>
                 {notes.map((note) => 
                     <Note note={note} onDelete={deleteNote} key={note.id} />
                 )}
