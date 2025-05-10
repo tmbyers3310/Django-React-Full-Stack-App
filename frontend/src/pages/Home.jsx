@@ -1,9 +1,9 @@
-import {useState, useEffect, use} from "react"
+import {useState, useEffect} from "react"
 import api from "../api";
 import Note from "../components/Note";
 import "../styles/Home.css";
 
-function Home() {
+function Home({loggedInUser}) {
     const [notes, setNotes] = useState([]);
     const [content, setContent] = useState("")
     const [title, setTitle] = useState("")
@@ -11,6 +11,13 @@ function Home() {
     useEffect(() => {
         getNotes();
     }, [])
+
+    const getUser = () =>{
+        api.get("/api/notes/")//get this route from backend URLs
+        .then((res) => res.data)
+        .then((data) => { setNotes(data); console.log("data: ",data) })
+        .catch((err) => alert('error in getNotes: ',err));
+    }
     
     const getNotes = () => {
         api.get("/api/notes/")//get this route from backend URLs
@@ -46,7 +53,7 @@ function Home() {
                 </a>
             </div>
             <div>
-                <h2>Notes {notes&&notes.filter((note, index) => index == 0).map((note) => (<p>ww{note.author_name}</p>))}</h2>
+                <h3>Logged in User: {loggedInUser&&loggedInUser}</h3>
                 {notes.map((note) => 
                     <Note note={note} onDelete={deleteNote} key={note.id} />
                 )}

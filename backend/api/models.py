@@ -7,8 +7,14 @@ class Note(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notes')
-    # author_name = 'testing_name'
-    # author_name = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, to_field='username')
+    author_name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.title
+    
+    def save(self, *args, **kwargs):
+
+        if self.author:
+            self.author_name = self.author
+
+        super().save(*args, **kwargs)

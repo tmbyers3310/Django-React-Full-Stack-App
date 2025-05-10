@@ -5,7 +5,7 @@ import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import "../styles/Form.css"
 import LoadingIndicator from "./LoadingIndicator";
 
-function Form({ route, method }) {
+function Form({ route, method, setLoggedInUser }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -16,6 +16,8 @@ function Form({ route, method }) {
     const handleSubmit = async (e) => {
         setLoading(true);
         e.preventDefault();
+
+        console.log('e: ',e)
 
         try {
             const res = await api.post(route, { username, password })
@@ -30,6 +32,7 @@ function Form({ route, method }) {
             alert(error)
         } finally {
             setLoading(false)
+            setLoggedInUser(username)
         }
     };
 
@@ -54,20 +57,18 @@ function Form({ route, method }) {
             <button className="form-button" type="submit">
                 {name}
             </button>
-            {method == 'login' ?
-                <div>
-                    <p>Need an account?
-                    <a href="/register/">Register</a>
-                    </p>
-                </div>
-                :
-                <div>
-                    <p>Already have an account?
-                    <a href="/login/">Login</a>
-                    </p>
-                </div>
+            <div>
+                {method == 'login' ?
+                        <p>Need an account?
+                        <a href="/register/">Register</a>
+                        </p>
+                    :
+                        <p>Already have an account?
+                        <a href="/login/">Login</a>
+                        </p>
+                }
+            </div>
                 
-            }
 
         </form>
     );
